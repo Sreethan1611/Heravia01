@@ -1,4 +1,4 @@
-run =  ["gunicorn", "--bind", "0.0.0.0:5000", "main:app"]
+run = "python3 Heravia/main.py"
 entrypoint = "main.py"
 modules = ["python-3.11"]
 
@@ -14,3 +14,4 @@ deploymentTarget = "cloudrun"
 [[ports]]
 localPort = 5000
 externalPort = 80
+exposeLocalhost = true
