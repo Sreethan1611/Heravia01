@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>AI Search (No JS)</title>
+    <title>Heravia</title>
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;600&family=M+PLUS+Rounded+1c:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="UTF-8">
     <style>
         body {
-            font-family: 'Comfortaa', 'M PLUS Rounded 1c', Arial, sans-serif;
+            font-family: 'Comfortaa', 'M PLUS Rounded 1c';
             background: #f5f8fa;
             color: #232a3a;
             margin: 0;
@@ -75,12 +75,12 @@
     <div class="container">
         <form method="post" style="text-align:right; margin-bottom:1em;">
             <button type="submit" name="toggle_mode" class="toggle-btn" value="1">
-                {{ '🌙' if mode == 'light' else '🌞' }} Switch to {{ 'Dark' if mode == 'light' else 'Light' }} Mode
+                {{ '🌙' if mode == 'light' else '☀️' }} Switch to {{ 'Dark' if mode == 'light' else 'Light' }} Mode
             </button>
         </form>
         <h1>Heravia AI Search</h1>
         <form method="post">
-            <input type="text" name="question" value="{{ question }}" required placeholder="Ask something about AI or the world..." autofocus>
+            <input type="text" name="question" value="{{ question }}" required placeholder="Ask something you want to find..." autofocus>
             <button type="submit">Search</button>
         </form>
         {% if answer %}

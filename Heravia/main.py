@@ -80,6 +80,42 @@ Answer:"""
         return response.json()["choices"][0]["message"]["content"]
     else:
         return f"Error: {response.status_code} — {response.text}"
+        
+def ask_groq_llama_fuse(question, mistral_ans, llama_ans):
+    prompt = f"""You are an expert assistant. You are given a question and two draft answers by different AI models. Your task is to fuse them into one concise, accurate, and helpful answer. Do not repeat anything. Preserve clarity and don't invent facts. Reply with the fused answer only.
+
+Question: {question}
+
+Mistral's Answer:
+{mistral_ans}
+
+LLaMA 3's Answer:
+{llama_ans}
+
+Fused Answer:"""
+
+    headers = {
+        "Authorization": f"Bearer {GROQ_API_KEY}",
+        "Content-Type": "application/json"
+    }
+    payload = {
+        "model": "meta-llama/llama-4-maverick-17b-128e-instruct",
+        "messages": [
+            {"role": "system", "content": "You are an expert at merging model responses into one."},
+            {"role": "user", "content": prompt}
+        ],
+        "max_tokens": 256
+    }
+    response = requests.post(
+        "https://api.groq.com/openai/v1/chat/completions",
+        headers=headers,
+        json=payload
+    )
+    if response.status_code == 200:
+        return response.json()["choices"][0]["message"]["content"]
+    else:
+        return f"Fusion Error: {response.status_code} — {response.text}"
+
 @app.route("/", methods=["GET", "POST"])
 def index():
     mode = session.get('mode', 'light')
@@ -94,7 +130,8 @@ def index():
             if snippets:
                 answer1 = ask_groq_mistral(question, snippets)
                 answer2 = ask_groq_lama(question, snippets)
-                answer = f"🔹 Mistral:\n{answer1.strip()}\n\n🔸 LLaMA 3:\n{answer2.strip()}"
+                fused_answer = ask_groq_llama_fuse(question, answer1, answer2)
+                answer = f"{fused_answer.strip()}"
             else:
                 answer = "No search results found."
         return render_template("index.html", answer=answer, snippets=snippets, mode=session.get('mode', 'light'), question=question)
