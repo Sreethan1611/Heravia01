@@ -1,6 +1,9 @@
 from flask import Flask, render_template, request, session, redirect, url_for
 import requests
 import os
+import json, time
+cache = {}
+CACHE_EXPIRY_SECONDS = 3600
 
 app = Flask(__name__)
 app.secret_key = 'change-this-secret'
@@ -39,8 +42,9 @@ def ask_groq_mistral(question, snippets):
             "model": "mistral-saba-24b",
             "messages": [
                 {"role": "system", "content": "You are a helpful AI assistant."},
-                {"role": "user", "content": prompt}
+                {"role": "user", "content": prompt}   
             ],
+            "temperature":0.2,
             "max_tokens": 256
         }
         response = requests.post(
@@ -69,6 +73,7 @@ Answer:"""
             {"role": "system", "content": "You are a helpful AI assistant."},
             {"role": "user", "content": prompt}
         ],
+        "temperature":0.2,
         "max_tokens": 256
     }
     response = requests.post(
@@ -115,6 +120,20 @@ Fused Answer:"""
         return response.json()["choices"][0]["message"]["content"]
     else:
         return f"Fusion Error: {response.status_code} — {response.text}"
+        
+def get_cached_response(question):
+    entry = cache.get(question)
+    if entry:
+        timestamp, data = entry
+        if time.time() - timestamp < CACHE_EXPIRY_SECONDS:
+            return data
+        else:
+            del cache[question]
+    return None
+
+def set_cache(question, answer, snippets):
+    cache[question] = (time.time(), {"answer": answer, "snippets": snippets})
+
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -124,16 +143,23 @@ def index():
             session['mode'] = 'dark' if mode == 'light' else 'light'
             return redirect(url_for("index"))
         question = request.form.get("question", "")
-        snippets, answer = [], ""
-        if question.strip():
-            snippets = serper_search(question)
+        cached = get_cached_response(question)
+        if cached:
+                    snippets = cached["snippets"]
+                    answer = cached["answer"]
+        else:
+            snippets, answer = [], ""
+            if question.strip():
+                snippets = serper_search(question)
             if snippets:
                 answer1 = ask_groq_mistral(question, snippets)
                 answer2 = ask_groq_lama(question, snippets)
                 fused_answer = ask_groq_llama_fuse(question, answer1, answer2)
                 answer = f"{fused_answer.strip()}"
+                set_cache(question, answer, snippets)
             else:
                 answer = "No search results found."
+
         return render_template("index.html", answer=answer, snippets=snippets, mode=session.get('mode', 'light'), question=question)
     return render_template("index.html", answer=None, snippets=[], mode=mode, question="")
 
