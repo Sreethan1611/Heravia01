@@ -3,6 +3,7 @@ name = "heravia"
 version = "0.1.0"
 description = "AI Navigate app"
 authors = ["Sreethan Kudikala <sreethan.thykudikala@gmail.com>"]
+package-mode = false
 
 [tool.poetry.dependencies]
 python = ">=3.11.0,<3.14"
