@@ -39,7 +39,7 @@ def ask_groq_mistral(question, snippets):
             "Content-Type": "application/json"
         }
         payload = {
-            "model": "mistral-saba-24b",
+            "model": "compound-beta",
             "messages": [
                 {"role": "system", "content": "You are a helpful AI assistant."},
                 {"role": "user", "content": prompt}   
@@ -91,7 +91,7 @@ def ask_groq_llama_fuse(question, mistral_ans, llama_ans):
 
 Question: {question}
 
-Mistral's Answer:
+Groq's Answer:
 {mistral_ans}
 
 LLaMA 3's Answer:
