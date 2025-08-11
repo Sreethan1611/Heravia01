@@ -1,31 +1,35 @@
 Heravia – AI-Powered Navigator for the AI Landscape
-Heravia is a curated AI discovery tool that helps users find the right AI products and tools based on their specific needs. It serves as an intelligent, user-guided navigator through the ever-growing ecosystem of AI websites, APIs, and platforms.
+Heravia is an AI discovery tool that assists users in locating AI platforms and products according to their requirements. Through the rapidly expanding AI ecosystem of websites, APIs, and platforms, it serves as an intelligent, user-guided navigator.
 
 Features
-AI Tool Search & Discovery – Users can describe what they want, and Heravia recommends relevant AI tools or platforms.
-Fusion AI Integration – Combines multiple AI models to improve result accuracy and relevance.
-Categorized Results – Groups tools based on functionality (e.g., image generation, summarization, coding assistants, etc.)
-Simple, Minimalist UI – Optimized for both desktop and mobile use.
-Dark Mode - Switch to dark and light modes with a click of a button.
+AI Tool Search & Discovery: Heravia suggests appropriate AI tools or platforms based on user descriptions.
+Fusion AI Integration: Enhances accuracy and relevance by combining outputs from two different AI models.
+Clean and responsive, minimalist user interface that functions on desktop and mobile devices.
+Dark Mode: Easily switch between the dark and light modes.
 
 How to Use
-Visit the Heravia web app.
-Type what kind of AI service you’re looking for (e.g., "summarize YouTube videos").
-Let Heravia suggest tools, platforms, or resources that fit your needs.
-Explore the recommended links directly.
+Check out the Heravia app (heravia.onrender.com).
+Type in the type of AI service you want (for example, "summarize YouTube videos").
+Allow Heravia to recommend resources, platforms, or tools based on your needs.
+Examine the suggested links in detail.
 
 Motivation
-It's overwhelming how quickly the AI landscape is growing.  Heravia was created to make AI discovery easier for developers, students, and creators.  Heravia can help you find specialized APIs, coding assistance, or AI art.
+Finding the right tool can be overwhelming due to the rapid growth of the AI space. Heravia was developed to help developers, students, and creators find specialized APIs, coding tools, or AI art platforms in minutes rather than hours.
 
 Tech Stack
-Python + Flask (backend)
-HTML/CSS/JSON (frontend)
-GroqAI API + Serper Search API
+Backend: Python + Flask
+Frontend: HTML, CSS, JSON, Javascript
+APIs: GroqAI API + Serper Search API
+
+Development:
+Short weekend coding sessions were used to create Heravia while juggling university entrance preparation and long school hours.
+Examples of open-source Flask and API usage were used to modify some of the code logic and API integrations.
+The project required UI modifications, integration, and customization to meet Heravia's needs.
 
 Credits
-Created by Sreethan CK.
-Built during intense university prep weekends with a vision to simplify access to AI for everyone.
+Creator: Sreethan CK
+ChatGPT helped in debugging.
+Inspiration: The need for a simpler and clutter-free way to navigate AI tools.
 
 Disclaimer
-Tool suggestions are generated using public AI search. Always check official documentation before using any recommended tool or API.
-
+Tool recommendations are generated via AI-powered search using publicly available sources. Always verify details on official websites before using any suggested API, platform, or service.
