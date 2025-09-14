@@ -68,7 +68,34 @@ Answer:"""
         "Content-Type": "application/json"
     }
     payload = {
-        "model": "llama3-8b-8192",
+        "model": "llama3.1-8b-instant",
+        "messages": [
+            {"role": "system", "content": "You are a helpful AI assistant."},
+            {"role": "user", "content": prompt}
+        ],
+        "temperature":0.2,
+        "max_tokens": 256
+    }
+    response = requests.post(
+        "https://api.groq.com/openai/v1/chat/completions",
+        headers=headers,
+        json=payload
+    )
+    if response.status_code == 200:
+        return response.json()["choices"][0]["message"]["content"]
+    else:
+        return f"Error: {response.status_code} — {response.text}"
+
+def ask_groq_gpt(question):
+    prompt = f"""Answer the user's question clearly and concisely. Dont use any text formatting. If the information is not available, say "I could not find the website you are looking for". Do not make up answers. If the question is not related to the web information, say "I cannot answer that question". If possible mention the pro's and con's of the website. Compare the website with other websites if possible. Don't make answers confusing to humans.
+Question: {question}
+Answer:"""
+    headers = {
+        "Authorization": f"Bearer {GROQ_API_KEY}",
+        "Content-Type": "application/json"
+    }
+    payload = {
+        "model": "openai/gpt-oss-120b",
         "messages": [
             {"role": "system", "content": "You are a helpful AI assistant."},
             {"role": "user", "content": prompt}
@@ -86,8 +113,8 @@ Answer:"""
     else:
         return f"Error: {response.status_code} — {response.text}"
         
-def ask_groq_llama_fuse(question, mistral_ans, llama_ans):
-    prompt = f"""You are an expert assistant. You are given a question and two draft answers by different AI models. Your task is to fuse them into one concise, accurate, and helpful answer. Do not repeat anything. Preserve clarity and don't invent facts. Reply with the fused answer only.
+def ask_groq_llama_fuse(question, mistral_ans, llama_ans, gpt_ans):
+    prompt = f"""You are an expert assistant. You are given a question and three draft answers by different AI models. Your task is to fuse them into one concise, accurate, and helpful answer. Do not repeat anything. Preserve clarity and don't invent facts. Reply with the fused answer only.
 
 Question: {question}
 
@@ -96,6 +123,9 @@ Groq's Answer:
 
 LLaMA 3's Answer:
 {llama_ans}
+
+GPT's Answer:
+{gpt_ans}
 
 Fused Answer:"""
 
@@ -154,7 +184,8 @@ def index():
             if snippets:
                 answer1 = ask_groq_mistral(question, snippets)
                 answer2 = ask_groq_lama(question, snippets)
-                fused_answer = ask_groq_llama_fuse(question, answer1, answer2)
+                answer3 = ask_groq_gpt(question)
+                fused_answer = ask_groq_llama_fuse(question, answer1, answer2, answer3)
                 answer = f"{fused_answer.strip()}"
                 set_cache(question, answer, snippets)
             else:
